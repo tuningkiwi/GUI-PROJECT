@@ -164,7 +164,7 @@ HCURSOR CmfcMemoDlg::OnQueryDragIcon()
 void CmfcMemoDlg::OnMenuOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	char buf[512];//FILE READ BUFFER 
+	//char buf[512];//FILE READ BUFFER 
 	CString str;
 		
 	OPENFILENAME ofn;
@@ -193,7 +193,7 @@ void CmfcMemoDlg::OnMenuOpen()
 	//FILE* fp = fopen("..\\hello_ANSI.txt", "rb"); 
 	
 	//C언어의 표준함수 ANSI encoding 
-	FILE* fp = fopen(fName, "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
+	//FILE* fp = fopen(fName, "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
 	//CStringA(str)
 
 
