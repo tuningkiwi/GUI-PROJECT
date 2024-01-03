@@ -59,12 +59,14 @@ CmfcMemoDlg::CmfcMemoDlg(CWnd* pParent /*=nullptr*/)
 void CmfcMemoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT1, Memo);
 }
 
 BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_COMMAND(ID_MENU_OPEN, &CmfcMemoDlg::OnMenuOpen)
 END_MESSAGE_MAP()
 
 
@@ -153,3 +155,48 @@ HCURSOR CmfcMemoDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CmfcMemoDlg::OnMenuOpen()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	char buf[512];//FILE READ BUFFER 
+	CString str;
+		
+	OPENFILENAME ofn;
+	wchar_t wbuf[100] = {0};// ofn 의 file name 저장공간 
+	//char lpstrFile[100] = "";
+	memset(&ofn, 0, sizeof(OPENFILENAME));
+	//ZeroMemory(&ofn, sizeof(ofn)); //메모리 공간 청소 
+	//ZeroMemory(wbuf, sizeof(wbuf)); //메모리 공간 청소 
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.lpstrFile = wbuf;//FILE NAME 저장공간
+
+
+
+	ofn.nMaxFile = 100; 
+	ofn.lpstrDefExt = L"";//확장자 
+
+	if (!GetOpenFileNameW(&ofn)) {//Return true or false 
+		return; 
+	}
+
+	str = wbuf; //cstirng <== wchar, cstring <== char
+
+
+	//절대경로 
+	//FILE* fp = fopen("C:\\Users\\EMBEDDED\\source\\repos\\winapp\\mfcMemo\\hello_ANSI.txt", "rb");
+	//상대경로로 설정시, 솔루션 파일 말고, 프로젝트 파일 폴더 기준으로 상대경로 지정하면 됨.
+	//FILE* fp = fopen("..\\hello_ANSI.txt", "rb"); 
+	FILE* fp = fopen(CStringA(str), "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
+	
+
+
+	// 최대 512까지 읽고, 중간에 \r\n을 만날 때, 거기까지만 읽어옴. 
+	while (fgets(buf, 512, fp)) {//buf에다가 읽어온 데이터를 저장 
+		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowTextW(str);//str에 데이터를 저장하겠다는 뜻
+		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
+		SetDlgItemText(IDC_EDIT1, str+buf);
+	}
+}
