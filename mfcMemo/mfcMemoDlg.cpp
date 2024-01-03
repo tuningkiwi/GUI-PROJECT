@@ -3,6 +3,7 @@
 //
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include "pch.h"
 #include "framework.h"
 #include "mfcMemo.h"
@@ -165,15 +166,15 @@ void CmfcMemoDlg::OnMenuOpen()
 	CString str;
 		
 	OPENFILENAME ofn;
-	wchar_t wbuf[100] = {0};// ofn 의 file name 저장공간 
-	char lpstrFile[100] = "";
+	//wchar_t wbuf[100] = {0};// ofn 의 file name 저장공간 
+	char fName[100] = "";
 	memset(&ofn, 0, sizeof(OPENFILENAME));
 	//ZeroMemory(&ofn, sizeof(ofn)); //메모리 공간 청소 
 	//ZeroMemory(wbuf, sizeof(wbuf)); //메모리 공간 청소 
 
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.lpstrFile = buf;//FILE NAME 저장공간
-	ofn.lpstrFile = lpstrFile;//FILE NAME 저장공간
+	ofn.lpstrFile = fName;//FILE NAME 저장공간
 
 
 
@@ -194,7 +195,7 @@ void CmfcMemoDlg::OnMenuOpen()
 	//FILE* fp = fopen("..\\hello_ANSI.txt", "rb"); 
 	
 	//C언어의 표준함수 ANSI encoding 
-	FILE* fp = fopen(CStringA(str), "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
+	FILE* fp = fopen(fName, "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
 	//CStringA(str)
 
 
@@ -205,10 +206,16 @@ void CmfcMemoDlg::OnMenuOpen()
 		SetDlgItemText(IDC_EDIT1, str+buf);
 	}
 
-	//헤더파일 iostream cstring 추가 
-	//c++ stream 표준. UTF-8 encoding 
-	//wchar_t buf1[512];
+	//헤더파일 iostream cstring fstream 추가 필요 
+	//c++ stream 표준. UTF-8 encoding (유니코드 문자를 지원하는 가변길이 문자 인코딩 방식) 
+	wchar_t buf1[512];
 	std::locale::global(std::locale(".UTF-8"));
-	std::ifstream ff(CStringA(str));
+	std::wifstream ff;
+	ff.open(fName);
+	for (; ff.getline(buf1, 512);) {
+		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
+		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
+		SetDlgItemText(IDC_EDIT1, str + buf1);
+	}
 
 }
