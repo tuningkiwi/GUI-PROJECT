@@ -1,9 +1,7 @@
 ﻿
 // mfcMemoDlg.cpp: 구현 파일
 //
-#include <cstring>
-#include <iostream>
-#include <fstream>
+
 #include "pch.h"
 #include "framework.h"
 #include "mfcMemo.h"
@@ -13,6 +11,10 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#include <cstring>
+#include <iostream>
+#include <fstream>
 
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
@@ -173,11 +175,7 @@ void CmfcMemoDlg::OnMenuOpen()
 	//ZeroMemory(wbuf, sizeof(wbuf)); //메모리 공간 청소 
 
 	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.lpstrFile = buf;//FILE NAME 저장공간
 	ofn.lpstrFile = fName;//FILE NAME 저장공간
-
-
-
 	ofn.nMaxFile = 100; 
 	//ofn.lpstrDefExt = L"";//유니코드 문자 집합 사용 시 
 	ofn.lpstrDefExt = "";
@@ -200,11 +198,14 @@ void CmfcMemoDlg::OnMenuOpen()
 
 
 	// 최대 512까지 읽고, 중간에 \r\n을 만날 때, 거기까지만 읽어옴. 
+	
+	/*
 	while (fgets(buf, 512, fp)) {//buf에다가 읽어온 데이터를 저장 
 		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
 		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
 		SetDlgItemText(IDC_EDIT1, str+buf);
 	}
+	*/
 
 	//헤더파일 iostream cstring fstream 추가 필요 
 	//c++ stream 표준. UTF-8 encoding (유니코드 문자를 지원하는 가변길이 문자 인코딩 방식) 
@@ -215,7 +216,9 @@ void CmfcMemoDlg::OnMenuOpen()
 	for (; ff.getline(buf1, 512);) {
 		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
 		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
-		SetDlgItemText(IDC_EDIT1, str + buf1);
+		str += buf1;
+		str += "\r\n";
+		SetDlgItemText(IDC_EDIT1, str);
 	}
 
 }
