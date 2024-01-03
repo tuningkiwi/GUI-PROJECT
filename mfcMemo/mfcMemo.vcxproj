@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CmfcFindDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="mfcMemo.h" />
     <ClInclude Include="mfcMemoDlg.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CmfcFindDlg.cpp" />
     <ClCompile Include="mfcMemo.cpp" />
     <ClCompile Include="mfcMemoDlg.cpp" />
     <ClCompile Include="pch.cpp">
