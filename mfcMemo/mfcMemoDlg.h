@@ -34,4 +34,5 @@ protected:
 public:
 	CEdit Memo;
 	afx_msg void OnMenuOpen();
+	afx_msg void OnMenuAbout();
 };

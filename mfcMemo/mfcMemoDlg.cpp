@@ -71,6 +71,8 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_COMMAND(ID_MENU_OPEN, &CmfcMemoDlg::OnMenuOpen)
+	ON_COMMAND(ID_MENU_ABOUT, &CmfcMemoDlg::OnMenuAbout)
+	//ON_COMMAND(32780, &CmfcMemoDlg::OnMenuAbout)
 END_MESSAGE_MAP()
 
 
@@ -220,5 +222,14 @@ void CmfcMemoDlg::OnMenuOpen()
 		str += "\r\n";
 		SetDlgItemText(IDC_EDIT1, str);
 	}
+
+}
+
+
+void CmfcMemoDlg::OnMenuAbout() //도움말 about 메뉴 기능 
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CAboutDlg dlg;
+	dlg.DoModal();
 
 }
