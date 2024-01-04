@@ -15,8 +15,7 @@ private:
 
 public:
 	CmfcMemoDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
-	//CString saveData = "";
-	//int start_pos = 0;
+
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -24,6 +23,8 @@ public:
 #endif
 
 	protected:
+	//accel 변수 선언
+	HACCEL accel;
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
 // 구현입니다.
@@ -44,4 +45,5 @@ public:
 	void AddText(CString s);
 	CEdit mEditMemo;
 	afx_msg void OnMenuNextfind();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

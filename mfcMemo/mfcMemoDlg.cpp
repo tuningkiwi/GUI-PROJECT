@@ -76,7 +76,6 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_COMMAND(ID_MENU_OPEN, &CmfcMemoDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_ABOUT, &CmfcMemoDlg::OnMenuAbout)
-	//ON_COMMAND(32780, &CmfcMemoDlg::OnMenuAbout)
 	ON_COMMAND(ID_MENU_FIND, &CmfcMemoDlg::OnMenuFind)
 	ON_COMMAND(ID_MENU_NEXTFIND, &CmfcMemoDlg::OnMenuNextfind)
 END_MESSAGE_MAP()
@@ -114,6 +113,8 @@ BOOL CmfcMemoDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	accel = LoadAccelerators(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_ACCEL1));
+
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -280,4 +281,17 @@ void CmfcMemoDlg::OnMenuNextfind()
 		mEditMemo.SetSel(start_pos, end);
 		start_pos++;
 	
+}
+
+
+BOOL CmfcMemoDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	if (accel) {
+		if (TranslateAccelerator(m_hWnd, accel, pMsg))
+			return TRUE;
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
 }
