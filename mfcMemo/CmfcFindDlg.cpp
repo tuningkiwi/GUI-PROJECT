@@ -64,7 +64,8 @@ BOOL CmfcFindDlg::PreTranslateMessage(MSG* pMsg) {
 		case (WM_KEYDOWN):
 			switch (pMsg->wParam) {
 				case VK_RETURN:
-					GetDlgItem(IDC_EDIT_FIND)->GetWindowText(mStr);					
+					GetDlgItem(IDC_EDIT_FIND)->GetWindowText(mStr);	
+					GetDlgItem(IDC_EDIT_REPLACE)->GetWindowText(rStr);
 					EndDialog(IDOK);//모달 상자를 닫고 IDOK를 반환합니다 
 					break;
 				case VK_ESCAPE:

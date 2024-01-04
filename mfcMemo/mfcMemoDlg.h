@@ -11,7 +11,9 @@ class CmfcMemoDlg : public CDialogEx
 // 생성입니다.
 private:
 	CString saveData = "";
+	//CString saveRData = "";
 	int start_pos = 0;
+	int mEncoding = 0;// [0] ANSI  [1] UTF-8
 
 public:
 	CmfcMemoDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
@@ -46,4 +48,7 @@ public:
 	CEdit mEditMemo;
 	afx_msg void OnMenuNextfind();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnMenuUtf8();
+	afx_msg void OnMenuAnsi();
+	afx_msg void OnMenuReplace();
 };

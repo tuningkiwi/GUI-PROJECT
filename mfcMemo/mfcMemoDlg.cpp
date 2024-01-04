@@ -78,6 +78,9 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_ABOUT, &CmfcMemoDlg::OnMenuAbout)
 	ON_COMMAND(ID_MENU_FIND, &CmfcMemoDlg::OnMenuFind)
 	ON_COMMAND(ID_MENU_NEXTFIND, &CmfcMemoDlg::OnMenuNextfind)
+	ON_COMMAND(ID_MENU_UTF8, &CmfcMemoDlg::OnMenuUtf8)
+	ON_COMMAND(ID_MENU_ANSI, &CmfcMemoDlg::OnMenuAnsi)
+	ON_COMMAND(ID_MENU_REPLACE, &CmfcMemoDlg::OnMenuReplace)
 END_MESSAGE_MAP()
 
 
@@ -173,8 +176,7 @@ HCURSOR CmfcMemoDlg::OnQueryDragIcon()
 void CmfcMemoDlg::OnMenuOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	//char buf[512];//FILE READ BUFFER 
-	CString str;
+
 		
 	OPENFILENAME ofn;
 	//wchar_t wbuf[100] = {0};// ofn 의 file name 저장공간 
@@ -201,30 +203,41 @@ void CmfcMemoDlg::OnMenuOpen()
 	//상대경로로 설정시, 솔루션 파일 말고, 프로젝트 파일 폴더 기준으로 상대경로 지정하면 됨.
 	//FILE* fp = fopen("..\\hello_ANSI.txt", "rb"); 
 	
-	//C언어의 표준함수 ANSI encoding 
-	//FILE* fp = fopen(fName, "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
+	
 	//CStringA(str)
 
 
-	// 최대 512까지 읽고, 중간에 \r\n을 만날 때, 거기까지만 읽어옴. 
+
+
 	
-	/*
-	while (fgets(buf, 512, fp)) {//buf에다가 읽어온 데이터를 저장 
-		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
-		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
-		SetDlgItemText(IDC_EDIT1, str+buf);
+	char buf[512];//FILE READ BUFFER 
+	CString str;
+	
+	//C언어의 표준함수 ANSI encoding 
+	//FILE* fp = fopen(fName, "rb");//ANSI 형태로만 받음 그래서 CStringA로 강제 변환
+	if (mEncoding == 0) {
+		FILE* fp = fopen(fName, "rb");
+
+		//최대 512까지 읽고, 중간에 \r\n을 만날 때, 거기까지만 읽어옴. 
+		while (fgets(buf, 512, fp)) {//buf에다가 읽어온 데이터를 저장 
+			((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
+			//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
+			SetDlgItemText(IDC_EDIT1, str + buf);
+		}
 	}
-	*/
 
 	//헤더파일 iostream cstring fstream 추가 필요 
-	//c++ stream 표준. UTF-8 encoding (유니코드 문자를 지원하는 가변길이 문자 인코딩 방식) 
-	wchar_t buf1[512];
-	std::locale::global(std::locale(".UTF-8"));
-	std::wifstream ff;
-	ff.open(fName);
-	for (; ff.getline(buf1, 512);) {
-		str = buf1;
-		AddText(str); AddText("\r\n");
+	//UTF-8 encoding c++ stream 표준(유니코드 문자를 지원하는 가변길이 문자 인코딩 방식) 
+	else if (mEncoding == 1) {
+
+		wchar_t buf1[512];
+		std::locale::global(std::locale(".UTF-8"));
+		std::wifstream ff;
+		ff.open(fName);
+		for (; ff.getline(buf1, 512);) {
+			str = buf1;
+			AddText(str); AddText("\r\n");
+		}
 	}
 
 }
@@ -244,6 +257,8 @@ void CmfcMemoDlg::OnMenuFind()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	CmfcFindDlg dlg;
+	//바꾸기 컴포넌트 VISIBLE 속성을 false 
+
 	if (dlg.DoModal() == IDOK) {
 		CString s;
 		mEditMemo.GetWindowText(s);
@@ -294,4 +309,55 @@ BOOL CmfcMemoDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CmfcMemoDlg::OnMenuAnsi()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CMenu* m = GetMenu();
+	m->CheckMenuItem(ID_MENU_UTF8, MF_UNCHECKED);
+	m->CheckMenuItem(ID_MENU_ANSI, MF_CHECKED);
+	mEncoding = 0;
+}
+
+
+void CmfcMemoDlg::OnMenuUtf8()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CMenu* m = GetMenu();
+	m->CheckMenuItem(ID_MENU_UTF8,MF_CHECKED);
+	m->CheckMenuItem(ID_MENU_ANSI, MF_UNCHECKED);
+	mEncoding = 1; 
+
+}
+
+
+
+
+void CmfcMemoDlg::OnMenuReplace()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CmfcFindDlg dlg;
+	CString toReplace;
+	CString s;
+	//VISIBLE 속성을 OFF
+
+	if (dlg.DoModal() == IDOK) {
+
+		//해당 글자 찾기 
+		CString s;
+	
+		mEditMemo.GetWindowText(s);
+		saveData = dlg.rStr;
+		s.Replace(dlg.mStr, dlg.rStr);
+		SetDlgItemText(IDC_EDIT_MEMO, s);
+
+		//바꾼 첫문자 셀렉션
+		int start = s.Find(dlg.rStr);
+		int end = start + dlg.rStr.GetLength();
+		start_pos = start + 1;
+		mEditMemo.SetSel(start, end);
+	}
+
 }

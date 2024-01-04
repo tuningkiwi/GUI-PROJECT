@@ -4,7 +4,8 @@ class CmfcFindDlg :
     public CDialogEx
 {
 public:
-    CString mStr = "";
+    CString mStr = ""; //찾는 문자 
+    CString rStr = ""; //replace 문자 
 
     CmfcFindDlg();
     virtual BOOL OnInitDialog();
