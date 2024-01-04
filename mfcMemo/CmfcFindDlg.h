@@ -5,9 +5,16 @@ class CmfcFindDlg :
 {
 public:
     CString mStr = "";
+
+    CmfcFindDlg();
     virtual BOOL OnInitDialog();
-//    virtual BOOL PreTranslateMessage(MSG* pMsg);
+    virtual void DoDataExchange(CDataExchange* pDX);
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+    
+    //    virtual BOOL PreTranslateMessage(MSG* pMsg);
     DECLARE_MESSAGE_MAP()
     afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+    
 };
 

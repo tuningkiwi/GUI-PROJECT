@@ -7,6 +7,8 @@
 #include "mfcMemo.h"
 #include "mfcMemoDlg.h"
 
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -104,4 +106,7 @@ BOOL CmfcMemoApp::InitInstance()
 	// 반환합니다.
 	return FALSE;
 }
+
+
+
 

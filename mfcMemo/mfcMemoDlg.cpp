@@ -7,6 +7,7 @@
 #include "mfcMemo.h"
 #include "mfcMemoDlg.h"
 #include "afxdialogex.h"
+#include "CmfcFindDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -35,6 +36,8 @@ public:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -47,6 +50,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	
 END_MESSAGE_MAP()
 
 
@@ -63,7 +67,7 @@ CmfcMemoDlg::CmfcMemoDlg(CWnd* pParent /*=nullptr*/)
 void CmfcMemoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT1, Memo);
+	DDX_Control(pDX, IDC_EDIT_MEMO, mEditMemo);
 }
 
 BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
@@ -73,6 +77,8 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_OPEN, &CmfcMemoDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_ABOUT, &CmfcMemoDlg::OnMenuAbout)
 	//ON_COMMAND(32780, &CmfcMemoDlg::OnMenuAbout)
+	ON_COMMAND(ID_MENU_FIND, &CmfcMemoDlg::OnMenuFind)
+	ON_COMMAND(ID_MENU_NEXTFIND, &CmfcMemoDlg::OnMenuNextfind)
 END_MESSAGE_MAP()
 
 
@@ -216,11 +222,8 @@ void CmfcMemoDlg::OnMenuOpen()
 	std::wifstream ff;
 	ff.open(fName);
 	for (; ff.getline(buf1, 512);) {
-		((CEdit*)GetDlgItem(IDC_EDIT1))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
-		//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
-		str += buf1;
-		str += "\r\n";
-		SetDlgItemText(IDC_EDIT1, str);
+		str = buf1;
+		AddText(str); AddText("\r\n");
 	}
 
 }
@@ -232,4 +235,49 @@ void CmfcMemoDlg::OnMenuAbout() //도움말 about 메뉴 기능
 	CAboutDlg dlg;
 	dlg.DoModal();
 
+
+}
+
+
+void CmfcMemoDlg::OnMenuFind()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CmfcFindDlg dlg;
+	if (dlg.DoModal() == IDOK) {
+		CString s;
+		mEditMemo.GetWindowText(s);
+		saveData = dlg.mStr;
+		int start = s.Find(dlg.mStr);
+		int end = start + dlg.mStr.GetLength();
+		start_pos = start + 1;
+		mEditMemo.SetSel(start,end);
+		
+		//AddText(dlg.mStr);
+	}
+}
+
+
+void CmfcMemoDlg::AddText(CString s) {
+
+	CString str;
+	((CEdit*)GetDlgItem(IDC_EDIT_MEMO))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
+	//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
+	str += s;
+	SetDlgItemText(IDC_EDIT1, str);
+}
+
+
+
+void CmfcMemoDlg::OnMenuNextfind()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+		CString s;
+		mEditMemo.GetWindowText(s);
+		
+		start_pos = s.Find(saveData,start_pos);
+
+		int end = start_pos + saveData.GetLength();
+		mEditMemo.SetSel(start_pos, end);
+		start_pos++;
+	
 }
