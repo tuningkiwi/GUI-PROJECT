@@ -28,7 +28,7 @@ public:
 	protected:
 	//accel 변수 선언
 	HACCEL accel;
-
+	CStatusBarCtrl mStatusBar;
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
 // 구현입니다.
@@ -53,4 +53,6 @@ public:
 	afx_msg void OnMenuUtf8();
 	afx_msg void OnMenuAnsi();
 	afx_msg void OnMenuReplace();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnMenuReplaceNext();
 };

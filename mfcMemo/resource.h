@@ -42,13 +42,14 @@
 #define ID_32793                        32793
 #define ID_MENU_UTF8                    32794
 #define ID_MENU_ANSI                    32795
+#define ID_MENU_REPLACE_NEXT            32801
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32800
+#define _APS_NEXT_COMMAND_VALUE         32802
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

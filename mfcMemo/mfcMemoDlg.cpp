@@ -39,6 +39,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	
+	afx_msg void OnMenuReplaceNext();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -52,6 +53,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 	
+
 END_MESSAGE_MAP()
 
 
@@ -82,6 +84,8 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_UTF8, &CmfcMemoDlg::OnMenuUtf8)
 	ON_COMMAND(ID_MENU_ANSI, &CmfcMemoDlg::OnMenuAnsi)
 	ON_COMMAND(ID_MENU_REPLACE, &CmfcMemoDlg::OnMenuReplace)
+	ON_WM_SIZE()
+	ON_COMMAND(ID_MENU_REPLACE_NEXT, &CmfcMemoDlg::OnMenuReplaceNext)
 END_MESSAGE_MAP()
 
 
@@ -118,8 +122,12 @@ BOOL CmfcMemoDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	accel = LoadAccelerators(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_ACCEL1));
-
-
+	
+	mStatusBar.Create(WS_CHILD|WS_VISIBLE,CRect(0,0,0,0),this,0);
+	RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST,2);
+	GetDynamicLayout()->AddItem(mStatusBar.GetSafeHwnd(),
+		CMFCDynamicLayout::MoveVertical(100),
+		CMFCDynamicLayout::SizeHorizontal(100));//다이내믹하게 100%로 조절을 같이 해주겠다 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -171,7 +179,6 @@ HCURSOR CmfcMemoDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-
 
 
 void CmfcMemoDlg::OnMenuOpen()
@@ -257,12 +264,10 @@ void CmfcMemoDlg::OnMenuAbout() //도움말 about 메뉴 기능
 void CmfcMemoDlg::OnMenuFind()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CmfcFindDlg dlg;
-	//바꾸기 컴포넌트 VISIBLE 속성을 false 
-	//((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->ShowWindow(SW_HIDE);
-	//((CEdit*)GetDlgItem(IDC_EDIT_FIND))->ShowWindow(SW_SHOW);
+	CmfcFindDlg dlg(0);
+
 	if (dlg.DoModal() == IDOK) {
-		//((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->ShowWindow(SW_HIDE);
+		
 		CString s;
 		mEditMemo.GetWindowText(s);
 		sFind = dlg.mStr;
@@ -270,18 +275,17 @@ void CmfcMemoDlg::OnMenuFind()
 		int end = start + dlg.mStr.GetLength();
 		start_pos = start + 1;
 		mEditMemo.SetSel(start,end);
-		
-		//AddText(dlg.mStr);
+
 	}
 
 }
 
 
+//현재 사용하지 않는 기능 
 void CmfcMemoDlg::AddText(CString s) {
 
 	CString str;
 	((CEdit*)GetDlgItem(IDC_EDIT_MEMO))->GetWindowText(str);//str에 데이터를 저장하겠다는 뜻
-	//GetDlgItem(IDC_EDIT1)->SetWindowTextW(str+buf);//저장한 str을 print 하겠다. 
 	str += s;
 	SetDlgItemText(IDC_EDIT1, str);
 }
@@ -346,43 +350,71 @@ void CmfcMemoDlg::OnMenuReplace()
 	//  my code 
 	// /////////////////////////////////
 
-	//// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	//CmfcFindDlg dlg;
-	//CString toReplace;
-	//CString s;
-	////VISIBLE 속성을 OFF
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CmfcFindDlg dlg(1);
+	//VISIBLE 속성을 OFF
 
-	//if (dlg.DoModal() == IDOK) {
+	if (dlg.DoModal() == IDOK) {
 
-	//	//해당 글자 찾기 
-	//	CString s;
-	//
-	//	mEditMemo.GetWindowText(s);
-	//	saveData = dlg.rStr;
-	//	s.Replace(dlg.mStr, dlg.rStr);
-	//	SetDlgItemText(IDC_EDIT_MEMO, s);
+		//해당 글자 찾기 
+		CString s;
+	
+		mEditMemo.GetWindowText(s);
+		sFind = dlg.mStr;
+		sReplace = dlg.rStr;
+		
+		s.Replace(sFind, sReplace);
+		SetDlgItemText(IDC_EDIT_MEMO, s);
 
-	//	//바꾼 첫문자 셀렉션
-	//	int start = s.Find(dlg.rStr);
-	//	int end = start + dlg.rStr.GetLength();
-	//	start_pos = start + 1;
-	//	mEditMemo.SetSel(start, end);
-	//}
+		//바꾼 첫문자 셀렉션
+		int start = s.Find(sReplace);
+		int end = start + sReplace.GetLength();
+		start_pos = start + 1;
+		mEditMemo.SetSel(start, end);
+	}
 
 
 	////////////////////////////////////
 	//  professor code 
 	// /////////////////////////////////
-	CmfcReplace dlg;
+	//CmfcReplace dlg;
 
-	if (dlg.DoModal() == IDOK) {
-		CString s;
-		mEditMemo.GetWindowText(s);
-		sFind = dlg.mStrFind;
-		sReplace = dlg.mStrReplace;
-		s.Replace(sFind, sReplace);
-		mEditMemo.SetWindowText(s);
-		//SetDlgItemText(IDC_EDIT_MEMO, s);
-	}
+	//if (dlg.DoModal() == IDOK) {
+	//	CString s;
+	//	mEditMemo.GetWindowText(s);
+	//	sFind = dlg.mStrFind;
+	//	sReplace = dlg.mStrReplace;
+	//	s.Replace(sFind, sReplace);
+	//	mEditMemo.SetWindowText(s);
+	//	//SetDlgItemText(IDC_EDIT_MEMO, s);
+	//}
 
 }
+
+
+void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+}
+
+
+
+void CmfcMemoDlg::OnMenuReplaceNext()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	//해당 글자 찾기 
+	CString s;
+
+	mEditMemo.GetWindowText(s);
+
+	s.Replace(sFind, sReplace);
+	SetDlgItemText(IDC_EDIT_MEMO, s);
+
+	//바꾼 첫문자 셀렉션
+	int start = s.Find(sReplace);
+	int end = start + sReplace.GetLength();
+	start_pos = start + 1;
+	mEditMemo.SetSel(start, end);
