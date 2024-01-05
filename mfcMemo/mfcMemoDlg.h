@@ -55,4 +55,5 @@ public:
 	afx_msg void OnMenuReplace();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnMenuReplaceNext();
+	afx_msg void OnMenuFont();
 };

@@ -91,6 +91,7 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_REPLACE, &CmfcMemoDlg::OnMenuReplace)
 	ON_WM_SIZE()
 	ON_COMMAND(ID_MENU_REPLACE_NEXT, &CmfcMemoDlg::OnMenuReplaceNext)
+	ON_COMMAND(ID_MENU_FONT, &CmfcMemoDlg::OnMenuFont)
 END_MESSAGE_MAP()
 
 
@@ -135,9 +136,9 @@ BOOL CmfcMemoDlg::OnInitDialog()
 	//GetDynamicLayout()->AddItem(mStatusBar.GetSafeHwnd(),
 	//	CMFCDynamicLayout::MoveVertical(100),
 	//	CMFCDynamicLayout::SizeHorizontal(100));//다이내믹하게 100%로 조절을 같이 해주겠다 
-	//int sec[] = {100,200};//0~100 0번섹션, 100~200 1번섹션, 뒤에는 빈칸 
-	//mStatusBar.SetParts(2,sec);
-	//mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
+	int sec[] = {100,200};//0~100 0번섹션, 100~200 1번섹션, 뒤에는 빈칸 
+	mStatusBar.SetParts(2,sec);
+	mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
 	//mStatusBar.SetText("TEST2", 1, SBT_NOBORDERS);
 	////END
 
@@ -340,11 +341,10 @@ void CmfcMemoDlg::OnMenuReplace()
 
 			mEditMemo.GetWindowText(s);
 			int start_pos = s.Find(sFind);
-			//자르기
-			//Insert(int iIndex, XCHAR ch);
+			
+			//바꾸기 단어 삽입 
 			s.Insert(start_pos, sReplace);
-
-			//Delete(int iIndex, int nCount = 1);
+			//찾기 단어 삭제 
 			s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
 
 			SetDlgItemText(IDC_EDIT_MEMO, s);
@@ -465,3 +465,19 @@ void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
 }
 
 
+
+
+void CmfcMemoDlg::OnMenuFont()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CFontDialog dlg;
+	dlg.DoModal();
+	
+	int fSize = dlg.GetSize();
+	CString fName = dlg.GetFaceName();
+
+	CFont font;
+	font.CreatePointFont(fSize,fName);
+	GetDlgItem(IDC_EDIT_MEMO)->SetFont(&font);
+	font.Detach(); // font 종료 꼭 해주기 메모리 할당 해제 
+}
