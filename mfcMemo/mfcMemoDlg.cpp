@@ -8,6 +8,7 @@
 #include "mfcMemoDlg.h"
 #include "afxdialogex.h"
 #include "CmfcFindDlg.h"
+#include "CmfcReplace.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -258,11 +259,13 @@ void CmfcMemoDlg::OnMenuFind()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	CmfcFindDlg dlg;
 	//바꾸기 컴포넌트 VISIBLE 속성을 false 
-
+	//((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->ShowWindow(SW_HIDE);
+	//((CEdit*)GetDlgItem(IDC_EDIT_FIND))->ShowWindow(SW_SHOW);
 	if (dlg.DoModal() == IDOK) {
+		//((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->ShowWindow(SW_HIDE);
 		CString s;
 		mEditMemo.GetWindowText(s);
-		saveData = dlg.mStr;
+		sFind = dlg.mStr;
 		int start = s.Find(dlg.mStr);
 		int end = start + dlg.mStr.GetLength();
 		start_pos = start + 1;
@@ -270,6 +273,7 @@ void CmfcMemoDlg::OnMenuFind()
 		
 		//AddText(dlg.mStr);
 	}
+
 }
 
 
@@ -290,9 +294,9 @@ void CmfcMemoDlg::OnMenuNextfind()
 		CString s;
 		mEditMemo.GetWindowText(s);
 		
-		start_pos = s.Find(saveData,start_pos);
+		start_pos = s.Find(sFind,start_pos);
 
-		int end = start_pos + saveData.GetLength();
+		int end = start_pos + sFind.GetLength();
 		mEditMemo.SetSel(start_pos, end);
 		start_pos++;
 	
@@ -337,27 +341,48 @@ void CmfcMemoDlg::OnMenuUtf8()
 
 void CmfcMemoDlg::OnMenuReplace()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CmfcFindDlg dlg;
-	CString toReplace;
-	CString s;
-	//VISIBLE 속성을 OFF
+
+	////////////////////////////////////
+	//  my code 
+	// /////////////////////////////////
+
+	//// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	//CmfcFindDlg dlg;
+	//CString toReplace;
+	//CString s;
+	////VISIBLE 속성을 OFF
+
+	//if (dlg.DoModal() == IDOK) {
+
+	//	//해당 글자 찾기 
+	//	CString s;
+	//
+	//	mEditMemo.GetWindowText(s);
+	//	saveData = dlg.rStr;
+	//	s.Replace(dlg.mStr, dlg.rStr);
+	//	SetDlgItemText(IDC_EDIT_MEMO, s);
+
+	//	//바꾼 첫문자 셀렉션
+	//	int start = s.Find(dlg.rStr);
+	//	int end = start + dlg.rStr.GetLength();
+	//	start_pos = start + 1;
+	//	mEditMemo.SetSel(start, end);
+	//}
+
+
+	////////////////////////////////////
+	//  professor code 
+	// /////////////////////////////////
+	CmfcReplace dlg;
 
 	if (dlg.DoModal() == IDOK) {
-
-		//해당 글자 찾기 
 		CString s;
-	
 		mEditMemo.GetWindowText(s);
-		saveData = dlg.rStr;
-		s.Replace(dlg.mStr, dlg.rStr);
-		SetDlgItemText(IDC_EDIT_MEMO, s);
-
-		//바꾼 첫문자 셀렉션
-		int start = s.Find(dlg.rStr);
-		int end = start + dlg.rStr.GetLength();
-		start_pos = start + 1;
-		mEditMemo.SetSel(start, end);
+		sFind = dlg.mStrFind;
+		sReplace = dlg.mStrReplace;
+		s.Replace(sFind, sReplace);
+		mEditMemo.SetWindowText(s);
+		//SetDlgItemText(IDC_EDIT_MEMO, s);
 	}
 
 }

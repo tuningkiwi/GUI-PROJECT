@@ -10,7 +10,8 @@ class CmfcMemoDlg : public CDialogEx
 {
 // 생성입니다.
 private:
-	CString saveData = "";
+	CString sFind = "";
+	CString sReplace = "";
 	//CString saveRData = "";
 	int start_pos = 0;
 	int mEncoding = 0;// [0] ANSI  [1] UTF-8
@@ -27,6 +28,7 @@ public:
 	protected:
 	//accel 변수 선언
 	HACCEL accel;
+
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
 // 구현입니다.
