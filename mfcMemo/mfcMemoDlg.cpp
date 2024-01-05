@@ -129,14 +129,17 @@ BOOL CmfcMemoDlg::OnInitDialog()
 	accel = LoadAccelerators(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_ACCEL1));
 	
 	mStatusBar.Create(WS_CHILD|WS_VISIBLE,CRect(0,0,0,0),this,0);
-	RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST,2);
-	GetDynamicLayout()->AddItem(mStatusBar.GetSafeHwnd(),
-		CMFCDynamicLayout::MoveVertical(100),
-		CMFCDynamicLayout::SizeHorizontal(100));//다이내믹하게 100%로 조절을 같이 해주겠다 
-	int sec[] = {100,200};//0~100 0번섹션, 100~200 1번섹션, 뒤에는 빈칸 
-	mStatusBar.SetParts(2,sec);
-	mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
-	mStatusBar.SetText("TEST2", 1, SBT_NOBORDERS);
+
+	////메인창의 사이즈 조절에 따라서 상태바도 같이 움직이는 기능 
+	//RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST,2);
+	//GetDynamicLayout()->AddItem(mStatusBar.GetSafeHwnd(),
+	//	CMFCDynamicLayout::MoveVertical(100),
+	//	CMFCDynamicLayout::SizeHorizontal(100));//다이내믹하게 100%로 조절을 같이 해주겠다 
+	//int sec[] = {100,200};//0~100 0번섹션, 100~200 1번섹션, 뒤에는 빈칸 
+	//mStatusBar.SetParts(2,sec);
+	//mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
+	//mStatusBar.SetText("TEST2", 1, SBT_NOBORDERS);
+	////END
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -453,8 +456,11 @@ void CmfcMemoDlg::OnMenuUtf8()
 void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
+	int nSBHeight = 30; 
 
-
+	if (mStatusBar) {// != NULL
+		mStatusBar.MoveWindow(0, cy - 30, cx, 30);
+	}
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
 

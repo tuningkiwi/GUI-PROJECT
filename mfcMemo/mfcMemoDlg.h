@@ -10,9 +10,8 @@ class CmfcMemoDlg : public CDialogEx
 {
 // 생성입니다.
 private:
-	CString sFind = "";
-	CString sReplace = "";
-	//CString saveRData = "";
+	CString sFind = "";//FIND에 입력한 단어
+	CString sReplace = "";//REPLACE에 입력한 단어 
 	int start_pos = 0;
 	int begin_pos = 0;
 	int mEncoding = 0;// [0] ANSI  [1] UTF-8
