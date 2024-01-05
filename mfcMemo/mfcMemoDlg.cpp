@@ -274,7 +274,7 @@ void CmfcMemoDlg::OnMenuAbout() //도움말 about 메뉴 기능
 void CmfcMemoDlg::OnMenuFind()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CmfcFindDlg dlg(0);
+	CmfcFindDlg dlg(FIND_MODE);
 
 	if (dlg.DoModal() == IDOK) {
 		
@@ -317,6 +317,102 @@ void CmfcMemoDlg::OnMenuNextfind()
 }
 
 
+
+void CmfcMemoDlg::OnMenuReplace()
+{
+
+	////////////////////////////////////
+	//  my code 
+	// /////////////////////////////////
+
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CmfcFindDlg dlg(REPLACE_MODE);
+	//VISIBLE 속성을 OFF
+
+	if (dlg.DoModal() == IDOK) {
+		if (dlg.replace_option == REPLACE_ONE) {
+			CString s;//  
+			sFind = dlg.mStr;
+			sReplace = dlg.rStr;
+
+			mEditMemo.GetWindowText(s);
+			int start_pos = s.Find(sFind);
+			//자르기
+			//Insert(int iIndex, XCHAR ch);
+			s.Insert(start_pos, sReplace);
+
+			//Delete(int iIndex, int nCount = 1);
+			s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
+
+			SetDlgItemText(IDC_EDIT_MEMO, s);
+
+			//바꾼 첫문자 셀렉션
+			int end = start_pos + sReplace.GetLength();
+			mEditMemo.SetSel(start_pos, end);
+		}
+		else if (dlg.replace_option == REPLACE_ALL) {
+			//해당 글자 찾기 
+			CString s;
+
+			mEditMemo.GetWindowText(s);
+			sFind = dlg.mStr;
+			sReplace = dlg.rStr;
+
+			s.Replace(sFind, sReplace);
+			SetDlgItemText(IDC_EDIT_MEMO, s);
+
+			//바꾼 첫문자 셀렉션
+			int start = s.Find(sReplace);
+			int end = start + sReplace.GetLength();
+			start_pos = start + 1;
+			mEditMemo.SetSel(start, end);
+		}
+
+	}
+
+
+	////////////////////////////////////
+	//  professor code 
+	// /////////////////////////////////
+	//CmfcReplace dlg;
+
+	//if (dlg.DoModal() == IDOK) {
+	//	CString s;
+	//	mEditMemo.GetWindowText(s);
+	//	sFind = dlg.mStrFind;
+	//	sReplace = dlg.mStrReplace;
+	//	s.Replace(sFind, sReplace);
+	//	mEditMemo.SetWindowText(s);
+	//	//SetDlgItemText(IDC_EDIT_MEMO, s);
+	//}
+
+}
+
+
+void CmfcMemoDlg::OnMenuReplaceNext()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	//해당 글자 찾기 
+	CString s;//  
+
+	mEditMemo.GetWindowText(s);
+	int start_pos = s.Find(sFind);
+	//자르기
+	//Insert(int iIndex, XCHAR ch);
+	s.Insert(start_pos, sReplace);
+
+	//Delete(int iIndex, int nCount = 1);
+	s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
+
+	SetDlgItemText(IDC_EDIT_MEMO, s);
+
+	//바꾼 첫문자 셀렉션
+	int end = start_pos + sReplace.GetLength();
+	mEditMemo.SetSel(start_pos, end);
+}
+
+
 BOOL CmfcMemoDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
@@ -354,77 +450,6 @@ void CmfcMemoDlg::OnMenuUtf8()
 
 
 
-void CmfcMemoDlg::OnMenuReplace()
-{
-
-	////////////////////////////////////
-	//  my code 
-	// /////////////////////////////////
-
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CmfcFindDlg dlg(1);
-	//VISIBLE 속성을 OFF
-
-	if (dlg.DoModal() == IDOK) {
-		if (dlg.replace_option == REPLACE_ONE) {
-			CString s;//  
-			sFind = dlg.mStr;
-			sReplace = dlg.rStr;
-
-			mEditMemo.GetWindowText(s);
-			int start_pos = s.Find(sFind);
-			//자르기
-			//Insert(int iIndex, XCHAR ch);
-			s.Insert(start_pos, sReplace);
-
-			//Delete(int iIndex, int nCount = 1);
-			s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
-
-			SetDlgItemText(IDC_EDIT_MEMO, s);
-
-			//바꾼 첫문자 셀렉션
-			int end = start_pos + sReplace.GetLength();
-			mEditMemo.SetSel(start_pos, end);
-		}
-		else if (dlg.replace_option == REPLACE_ALL) {
-			//해당 글자 찾기 
-			CString s;
-
-			mEditMemo.GetWindowText(s);
-			sFind = dlg.mStr;
-			sReplace = dlg.rStr;
-			
-			s.Replace(sFind, sReplace);
-			SetDlgItemText(IDC_EDIT_MEMO, s);
-
-			//바꾼 첫문자 셀렉션
-			int start = s.Find(sReplace);
-			int end = start + sReplace.GetLength();
-			start_pos = start + 1;
-			mEditMemo.SetSel(start, end);
-		}
-		
-	}
-
-
-	////////////////////////////////////
-	//  professor code 
-	// /////////////////////////////////
-	//CmfcReplace dlg;
-
-	//if (dlg.DoModal() == IDOK) {
-	//	CString s;
-	//	mEditMemo.GetWindowText(s);
-	//	sFind = dlg.mStrFind;
-	//	sReplace = dlg.mStrReplace;
-	//	s.Replace(sFind, sReplace);
-	//	mEditMemo.SetWindowText(s);
-	//	//SetDlgItemText(IDC_EDIT_MEMO, s);
-	//}
-
-}
-
-
 void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
@@ -434,26 +459,3 @@ void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
 }
 
 
-
-void CmfcMemoDlg::OnMenuReplaceNext()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-	//해당 글자 찾기 
-	CString s;//  
-
-	mEditMemo.GetWindowText(s);
-	int start_pos = s.Find(sFind);
-	//자르기
-	//Insert(int iIndex, XCHAR ch);
-	s.Insert(start_pos, sReplace);
-
-	//Delete(int iIndex, int nCount = 1);
-	s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
-
-	SetDlgItemText(IDC_EDIT_MEMO, s);
-
-	//바꾼 첫문자 셀렉션
-	int end = start_pos + sReplace.GetLength();
-	mEditMemo.SetSel(start_pos, end);
-}
