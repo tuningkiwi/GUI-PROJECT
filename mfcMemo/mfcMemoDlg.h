@@ -15,6 +15,8 @@ private:
 	int start_pos = 0;
 	int begin_pos = 0;
 	int mEncoding = 0;// [0] ANSI  [1] UTF-8
+	int fSize = 0;
+	CString fName = "";
 
 public:
 	CmfcMemoDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
@@ -56,4 +58,6 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnMenuReplaceNext();
 	afx_msg void OnMenuFont();
+//	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

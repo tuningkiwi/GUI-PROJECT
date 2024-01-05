@@ -92,6 +92,8 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_COMMAND(ID_MENU_REPLACE_NEXT, &CmfcMemoDlg::OnMenuReplaceNext)
 	ON_COMMAND(ID_MENU_FONT, &CmfcMemoDlg::OnMenuFont)
+//	ON_WM_HSCROLL()
+ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -141,6 +143,9 @@ BOOL CmfcMemoDlg::OnInitDialog()
 	mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
 	//mStatusBar.SetText("TEST2", 1, SBT_NOBORDERS);
 	////END
+
+	fSize = 100;
+	fName = "Arial";
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -473,11 +478,45 @@ void CmfcMemoDlg::OnMenuFont()
 	CFontDialog dlg;
 	dlg.DoModal();
 	
-	int fSize = dlg.GetSize();
+	fSize = dlg.GetSize();
 	CString fName = dlg.GetFaceName();
 
 	CFont font;
 	font.CreatePointFont(fSize,fName);
+
 	GetDlgItem(IDC_EDIT_MEMO)->SetFont(&font);
 	font.Detach(); // font 종료 꼭 해주기 메모리 할당 해제 
+}
+
+
+//void CmfcMemoDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+//{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+//	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+//}
+
+
+BOOL CmfcMemoDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+
+	if (nFlags == MK_CONTROL) {
+		CFont font;
+		if (zDelta > 0) {
+			fSize += 5;			
+		}
+		else {
+			fSize -= 5;
+		}
+		if (fSize < 20) fSize = 20;
+
+		font.CreatePointFont(fSize, fName);
+		GetDlgItem(IDC_EDIT_MEMO)->SetFont(&font);
+		font.Detach();
+	
+	}
+
+	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
