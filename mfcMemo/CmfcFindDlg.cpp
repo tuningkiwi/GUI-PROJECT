@@ -5,8 +5,6 @@
 #include "mfcMemoDlg.h"
 #include "afxdialogex.h"
 
-#define FIND_MODE 0
-#define REPLACE_MODE 1
 
 BOOL CmfcFindDlg::OnInitDialog()
 {
@@ -14,7 +12,12 @@ BOOL CmfcFindDlg::OnInitDialog()
 	mStr = "";
 	if (mode == FIND_MODE ) {//찾기 모드 
 		((CEdit*)GetDlgItem(IDC_EDIT_FIND))->ShowWindow(SW_SHOW);
+		((CEdit*)GetDlgItem(IDC_BUTTON_FIND))->ShowWindow(SW_SHOW);
 		((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->ShowWindow(SW_HIDE);
+		((CEdit*)GetDlgItem(IDC_REPLACE_ONE))->ShowWindow(SW_HIDE);
+		((CEdit*)GetDlgItem(IDC_REPLACE_ALL))->ShowWindow(SW_HIDE);
+		((CEdit*)GetDlgItem(IDC_STATIC_REPLACE))->ShowWindow(SW_HIDE);
+
 	}
 	else if(mode == REPLACE_MODE){//바꾸기 모드 
 		((CEdit*)GetDlgItem(IDC_EDIT_FIND))->ShowWindow(SW_SHOW);
@@ -28,6 +31,9 @@ BOOL CmfcFindDlg::OnInitDialog()
 
 BEGIN_MESSAGE_MAP(CmfcFindDlg, CDialogEx)
 	ON_WM_KEYDOWN()
+	ON_BN_CLICKED(IDC_REPLACE_ONE, &CmfcFindDlg::OnBnClickedReplaceOne)
+	ON_BN_CLICKED(IDC_REPLACE_ALL, &CmfcFindDlg::OnBnClickedReplaceAll)
+	ON_BN_CLICKED(IDC_BUTTON_FIND, &CmfcFindDlg::OnBnClickedButtonFind)
 END_MESSAGE_MAP()
 
 
@@ -86,4 +92,32 @@ BOOL CmfcFindDlg::PreTranslateMessage(MSG* pMsg) {
 			break;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void CmfcFindDlg::OnBnClickedReplaceOne()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CEdit*)GetDlgItem(IDC_EDIT_FIND))->GetWindowText(mStr);
+	((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->GetWindowText(rStr);
+	replace_option = REPLACE_ONE;
+	EndDialog(IDOK);
+
+}
+
+
+void CmfcFindDlg::OnBnClickedReplaceAll()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CEdit*)GetDlgItem(IDC_EDIT_FIND))->GetWindowText(mStr);
+	((CEdit*)GetDlgItem(IDC_EDIT_REPLACE))->GetWindowText(rStr);
+	replace_option = REPLACE_ALL;
+	EndDialog(IDOK);
+}
+
+
+void CmfcFindDlg::OnBnClickedButtonFind()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	((CEdit*)GetDlgItem(IDC_EDIT_FIND))->GetWindowText(mStr);
+	EndDialog(IDOK);
 }

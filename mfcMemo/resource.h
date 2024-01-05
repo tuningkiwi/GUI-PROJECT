@@ -19,6 +19,11 @@
 #define IDC_EDIT_FIND                   1002
 #define IDC_REPLACE_COMPLETE            1002
 #define IDC_EDIT_REPLACE2               1003
+#define IDC_REPLACE_ONE                 1004
+#define IDC_REPLACE_ALL                 1005
+#define IDC_BUTTON_FIND                 1006
+#define IDC_STATIC_FIND                 1007
+#define IDC_STATIC_REPLACE              1008
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -42,6 +47,7 @@
 #define ID_32793                        32793
 #define ID_MENU_UTF8                    32794
 #define ID_MENU_ANSI                    32795
+#define ID_32800                        32800
 #define ID_MENU_REPLACE_NEXT            32801
 
 // Next default values for new objects
@@ -49,8 +55,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32802
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_COMMAND_VALUE         32804
+#define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

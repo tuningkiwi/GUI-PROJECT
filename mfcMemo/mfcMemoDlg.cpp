@@ -18,6 +18,11 @@
 #include <iostream>
 #include <fstream>
 
+#define FIND_MODE 0
+#define REPLACE_MODE 1
+#define REPLACE_ONE 0
+#define REPLACE_ALL 1
+
 
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
@@ -128,6 +133,11 @@ BOOL CmfcMemoDlg::OnInitDialog()
 	GetDynamicLayout()->AddItem(mStatusBar.GetSafeHwnd(),
 		CMFCDynamicLayout::MoveVertical(100),
 		CMFCDynamicLayout::SizeHorizontal(100));//다이내믹하게 100%로 조절을 같이 해주겠다 
+	int sec[] = {100,200};//0~100 0번섹션, 100~200 1번섹션, 뒤에는 빈칸 
+	mStatusBar.SetParts(2,sec);
+	mStatusBar.SetText("CHAR SET", 0, SBT_NOBORDERS);
+	mStatusBar.SetText("TEST2", 1, SBT_NOBORDERS);
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -327,6 +337,7 @@ void CmfcMemoDlg::OnMenuAnsi()
 	m->CheckMenuItem(ID_MENU_UTF8, MF_UNCHECKED);
 	m->CheckMenuItem(ID_MENU_ANSI, MF_CHECKED);
 	mEncoding = 0;
+	mStatusBar.SetText("ANSI", 0, SBT_NOBORDERS);
 }
 
 
@@ -337,7 +348,7 @@ void CmfcMemoDlg::OnMenuUtf8()
 	m->CheckMenuItem(ID_MENU_UTF8,MF_CHECKED);
 	m->CheckMenuItem(ID_MENU_ANSI, MF_UNCHECKED);
 	mEncoding = 1; 
-
+	mStatusBar.SetText("UTF-8", 0, SBT_NOBORDERS);
 }
 
 
@@ -355,22 +366,44 @@ void CmfcMemoDlg::OnMenuReplace()
 	//VISIBLE 속성을 OFF
 
 	if (dlg.DoModal() == IDOK) {
+		if (dlg.replace_option == REPLACE_ONE) {
+			CString s;//  
+			sFind = dlg.mStr;
+			sReplace = dlg.rStr;
 
-		//해당 글자 찾기 
-		CString s;
-	
-		mEditMemo.GetWindowText(s);
-		sFind = dlg.mStr;
-		sReplace = dlg.rStr;
+			mEditMemo.GetWindowText(s);
+			int start_pos = s.Find(sFind);
+			//자르기
+			//Insert(int iIndex, XCHAR ch);
+			s.Insert(start_pos, sReplace);
+
+			//Delete(int iIndex, int nCount = 1);
+			s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
+
+			SetDlgItemText(IDC_EDIT_MEMO, s);
+
+			//바꾼 첫문자 셀렉션
+			int end = start_pos + sReplace.GetLength();
+			mEditMemo.SetSel(start_pos, end);
+		}
+		else if (dlg.replace_option == REPLACE_ALL) {
+			//해당 글자 찾기 
+			CString s;
+
+			mEditMemo.GetWindowText(s);
+			sFind = dlg.mStr;
+			sReplace = dlg.rStr;
+			
+			s.Replace(sFind, sReplace);
+			SetDlgItemText(IDC_EDIT_MEMO, s);
+
+			//바꾼 첫문자 셀렉션
+			int start = s.Find(sReplace);
+			int end = start + sReplace.GetLength();
+			start_pos = start + 1;
+			mEditMemo.SetSel(start, end);
+		}
 		
-		s.Replace(sFind, sReplace);
-		SetDlgItemText(IDC_EDIT_MEMO, s);
-
-		//바꾼 첫문자 셀렉션
-		int start = s.Find(sReplace);
-		int end = start + sReplace.GetLength();
-		start_pos = start + 1;
-		mEditMemo.SetSel(start, end);
 	}
 
 
@@ -396,6 +429,7 @@ void CmfcMemoDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialogEx::OnSize(nType, cx, cy);
 
+
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 }
 
@@ -406,15 +440,20 @@ void CmfcMemoDlg::OnMenuReplaceNext()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
 	//해당 글자 찾기 
-	CString s;
+	CString s;//  
 
 	mEditMemo.GetWindowText(s);
+	int start_pos = s.Find(sFind);
+	//자르기
+	//Insert(int iIndex, XCHAR ch);
+	s.Insert(start_pos, sReplace);
 
-	s.Replace(sFind, sReplace);
+	//Delete(int iIndex, int nCount = 1);
+	s.Delete(start_pos + sReplace.GetLength(), sFind.GetLength());
+
 	SetDlgItemText(IDC_EDIT_MEMO, s);
 
 	//바꾼 첫문자 셀렉션
-	int start = s.Find(sReplace);
-	int end = start + sReplace.GetLength();
-	start_pos = start + 1;
-	mEditMemo.SetSel(start, end);
+	int end = start_pos + sReplace.GetLength();
+	mEditMemo.SetSel(start_pos, end);
+}

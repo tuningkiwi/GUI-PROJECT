@@ -14,6 +14,7 @@ private:
 	CString sReplace = "";
 	//CString saveRData = "";
 	int start_pos = 0;
+	int begin_pos = 0;
 	int mEncoding = 0;// [0] ANSI  [1] UTF-8
 
 public:
