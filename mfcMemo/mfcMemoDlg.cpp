@@ -92,7 +92,6 @@ BEGIN_MESSAGE_MAP(CmfcMemoDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_COMMAND(ID_MENU_REPLACE_NEXT, &CmfcMemoDlg::OnMenuReplaceNext)
 	ON_COMMAND(ID_MENU_FONT, &CmfcMemoDlg::OnMenuFont)
-//	ON_WM_HSCROLL()
 ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
@@ -338,13 +337,14 @@ void CmfcMemoDlg::OnMenuReplace()
 	CmfcFindDlg dlg(REPLACE_MODE);
 	//VISIBLE 속성을 OFF
 
-	if (dlg.DoModal() == IDOK) {
-		if (dlg.replace_option == REPLACE_ONE) {
-			CString s;//  
-			sFind = dlg.mStr;
-			sReplace = dlg.rStr;
+	if (dlg.DoModal() == IDOK) {//EndDialog() 신호를 받았을 때, return 
+		CString s;
 
-			mEditMemo.GetWindowText(s);
+		mEditMemo.GetWindowText(s);
+		sFind = dlg.mStr;
+		sReplace = dlg.rStr;
+		if (dlg.replace_option == REPLACE_ONE) {//한단어만 바꾸기 
+
 			int start_pos = s.Find(sFind);
 			
 			//바꾸기 단어 삽입 
@@ -358,13 +358,7 @@ void CmfcMemoDlg::OnMenuReplace()
 			int end = start_pos + sReplace.GetLength();
 			mEditMemo.SetSel(start_pos, end);
 		}
-		else if (dlg.replace_option == REPLACE_ALL) {
-			//해당 글자 찾기 
-			CString s;
-
-			mEditMemo.GetWindowText(s);
-			sFind = dlg.mStr;
-			sReplace = dlg.rStr;
+		else if (dlg.replace_option == REPLACE_ALL) {//모두 바꾸기 
 
 			s.Replace(sFind, sReplace);
 			SetDlgItemText(IDC_EDIT_MEMO, s);
@@ -397,6 +391,7 @@ void CmfcMemoDlg::OnMenuReplace()
 }
 
 
+//한단어 단위로 바꾸기(단축키 사용 가능)  
 void CmfcMemoDlg::OnMenuReplaceNext()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -488,13 +483,6 @@ void CmfcMemoDlg::OnMenuFont()
 	font.Detach(); // font 종료 꼭 해주기 메모리 할당 해제 
 }
 
-
-//void CmfcMemoDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
-//{
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
-//	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
-//}
 
 
 BOOL CmfcMemoDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
